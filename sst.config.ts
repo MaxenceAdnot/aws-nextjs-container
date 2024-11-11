@@ -22,6 +22,17 @@ export default $config({
       dev: {
         command: "npm run dev",
       },
+      transform: {
+        service: {
+          launchType: undefined,
+          capacityProviderStrategies: [
+            {
+              capacityProvider: "FARGATE_SPOT",
+              weight: 1,
+            },
+          ],
+        },
+      },
     });
   },
 });
