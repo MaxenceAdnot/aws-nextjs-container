@@ -14,7 +14,7 @@ export default $config({
     const redis = new sst.aws.Redis("MyRedis", { vpc });
     const cluster = new sst.aws.Cluster("MyCluster", { vpc });
 
-    cluster.addService("MyService", {
+    const service = cluster.addService("MyService", {
       loadBalancer: {
         ports: [{ listen: "443/https", forward: "3000/http" }],
         domain: {
@@ -37,5 +37,25 @@ export default $config({
         },
       },
     });
+
+    if (!$dev) {
+      // Never in development cause the loadbalancer is not created
+      const loadBalancer = service.nodes.loadBalancer;
+      new aws.lb.Listener("http-listener", {
+        loadBalancerArn: loadBalancer.arn,
+        port: 80,
+        protocol: "HTTP",
+        defaultActions: [
+          {
+            type: "redirect",
+            redirect: {
+              port: "443",
+              protocol: "HTTPS",
+              statusCode: "HTTP_301",
+            },
+          },
+        ],
+      });
+    }
   },
 });
