@@ -18,7 +18,7 @@ export default $config({
       loadBalancer: {
         ports: [{ listen: "443/https", forward: "3000/http" }],
         domain: {
-          name: "nextjs-redis.sandbox-sst.rstck.in",
+          name: $app.stage + ".nextjs-redis.sandbox-sst.rstck.in",
         },
       },
       link: [redis],
