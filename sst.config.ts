@@ -16,7 +16,10 @@ export default $config({
 
     cluster.addService("MyService", {
       loadBalancer: {
-        ports: [{ listen: "80/http", forward: "3000/http" }],
+        ports: [{ listen: "443/https", forward: "3000/http" }],
+        domain: {
+          name: "nextjs-redis.sandbox-sst.rstck.in",
+        },
       },
       link: [redis],
       dev: {
